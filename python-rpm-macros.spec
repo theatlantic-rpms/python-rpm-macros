@@ -1,13 +1,14 @@
 Name:           python-rpm-macros
 Version:        3
-Release:        21%{?dist}
+Release:        22%{?dist}
 Summary:        The unversioned Python RPM macros
 
 License:        MIT
 Source0:        macros.python
 Source1:        macros.python-srpm
 Source2:        macros.python2
-Source3:        macros.python3
+# Source3:        macros.python3
+Source4:        macros.python3.6
 
 BuildArch:      noarch
 # For %%python3_pkgversion used in %%python_provide
@@ -36,39 +37,51 @@ Summary:        RPM macros for building Python 2 packages
 %description -n python2-rpm-macros
 RPM macros for building Python 2 packages.
 
-%package -n python3-rpm-macros
+# %package -n python3-rpm-macros
+# Summary:        RPM macros for building Python 3 packages
+# # Would need to be different for each release - worth it?
+# #Conflicts:      python3-devel < 3.5.1-3
+#
+# %description -n python3-rpm-macros
+# RPM macros for building Python 3.6 packages.
+
+%package -n python36u-rpm-macros
 Summary:        RPM macros for building Python 3 packages
-# Would need to be different for each release - worth it?
-#Conflicts:      python3-devel < 3.5.1-3
 
-%description -n python3-rpm-macros
-RPM macros for building Python 3 packages.
-
+%description -n python36u-rpm-macros
+RPM macros for building Python 3.6 packages.
 
 %prep
 
 %build
 
 %install
-mkdir -p %{buildroot}/%{rpmmacrodir}
-install -m 644 %{SOURCE0} %{SOURCE1} %{SOURCE2} %{SOURCE3} \
-  %{buildroot}/%{rpmmacrodir}/
+mkdir -p %{buildroot}/%{_rpmconfigdir}/macros.d
+install -m 644 %{SOURCE0} %{SOURCE1} %{SOURCE2} %{SOURCE4} \
+  %{buildroot}/%{_rpmconfigdir}/macros.d/
 
 
 %files
-%{rpmmacrodir}/macros.python
+%{_rpmconfigdir}/macros.d/macros.python
 
 %files -n python-srpm-macros
-%{rpmmacrodir}/macros.python-srpm
+%{_rpmconfigdir}/macros.d/macros.python-srpm
 
 %files -n python2-rpm-macros
-%{rpmmacrodir}/macros.python2
+%{_rpmconfigdir}/macros.d/macros.python2
 
-%files -n python3-rpm-macros
-%{rpmmacrodir}/macros.python3
+# %files -n python3-rpm-macros
+# %{_rpmconfigdir}/macros.d/macros.python3
+
+%files -n python36u-rpm-macros
+%{_rpmconfigdir}/macros.d/macros.python3.6
 
 
 %changelog
+* Fri Aug 11 2017 Frankie Dintino <fdintino@gmail.com> - 3-22
+- Added IUS 3.6 package
+- Add helper macros for installing universal, non-universal, and arch wheels
+
 * Thu Jul 27 2017 Fedora Release Engineering <releng@fedoraproject.org> - 3-21
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_27_Mass_Rebuild
 

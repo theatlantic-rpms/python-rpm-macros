@@ -35,3 +35,19 @@
 %py2_install_wheel() %{expand:\\\
   pip%{python2_version} install -I dist/%{1} --root %{buildroot} --strip-file-prefix %{buildroot} --no-deps
 }
+
+%python2_wheelarchsuffix %{expand:$(%{__python2} -c 'from wheel.pep425tags import get_abbr_impl, get_impl_ver, get_abi_tag; from distutils.util import get_platform; print("-".join([get_abbr_impl() + get_impl_ver(), get_abi_tag(), get_platform().replace("-", "_").replace(".", "_")]))')}
+
+%py2_install_arch_wheel() %{expand:\\\
+  pip%{python2_version} install -I \\\
+    dist/%{1}-%{version}-$(%{__python2} -c 'from wheel.pep425tags import get_abbr_impl, get_impl_ver, get_abi_tag; from distutils.util import get_platform; print("-".join([get_abbr_impl() + get_impl_ver(), get_abi_tag(), get_platform().replace("-", "_").replace(".", "_")]))').whl \\\
+    --root %{buildroot} --strip-file-prefix %{buildroot} --no-deps
+}
+
+%py2_install_univ_wheel() %{expand:\\\
+  pip%{python2_version} install -I dist/%{1}-%{version}-py2.py3-none-any.whl --root %{buildroot} --strip-file-prefix %{buildroot} --no-deps
+}
+
+%py2_install_py3_wheel() %{expand:\\\
+  pip%{python2_version} install -I dist/%{1}-%{version}-py3-none-any.whl --root %{buildroot} --strip-file-prefix %{buildroot} --no-deps
+}
